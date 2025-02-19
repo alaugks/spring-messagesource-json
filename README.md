@@ -2,7 +2,7 @@
 
 This package provides a [MessageSource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/MessageSource.html) for using translations from JSON files.
 
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=alaugks_spring-xliff-translation&metric=alert_status)](https://sonarcloud.io/summary/overall?id=alaugks_spring-xliff-translation)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=alaugks_spring-messagesource-json&metric=alert_status)](https://sonarcloud.io/summary/overall?id=alaugks_spring-messagesource-json)
 [![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/0.1.0-SNAPSHOT)
 
 ## Dependency
@@ -25,8 +25,7 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 
 ## MessageSource Configuration
 
-`builder(Locale defaultLocale, String locationPattern)` or<br>
-`builder(Locale defaultLocale, List<String> locationPatterns)` (***required***)
+`builder(Locale defaultLocale, LocationPattern locationPattern)` (***required***)
 * Argument `Locale locale`: Defines the default locale.
 * Argument `String locationPattern` | `List<String> locationPatterns`:
   * Defines the pattern used to select the JSON files.
