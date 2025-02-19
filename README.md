@@ -8,7 +8,7 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 ## Dependency
 
 ### Maven
-```json
+```xml
 <dependency>
     <groupId>io.github.alaugks</groupId>
     <artifactId>spring-messagesource-json</artifactId>
