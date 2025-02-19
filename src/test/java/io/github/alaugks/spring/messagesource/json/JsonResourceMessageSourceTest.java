@@ -3,7 +3,6 @@ package io.github.alaugks.spring.messagesource.json;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
-import java.util.List;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 
