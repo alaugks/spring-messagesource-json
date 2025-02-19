@@ -8,7 +8,7 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 ## Dependency
 
 ### Maven
-```xml
+```json
 <dependency>
     <groupId>io.github.alaugks</groupId>
     <artifactId>spring-messagesource-json</artifactId>
@@ -111,123 +111,54 @@ Mixing JSON versions is possible. Here is an example using JSON 1.2 and JSON 2.1
 
 ##### messages.json
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<xliff version="1.2"
-       xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en"
-          target-language="en">
-        <body>
-            <trans-unit id="headline">
-                <source>Headline</source>
-                <target>Headline</target>
-            </trans-unit>
-            <trans-unit id="postcode">
-                <source>Postcode</source>
-                <target>Postcode</target>
-            </trans-unit>
-        </body>
-    </file>
-</xliff>
+```json
+{
+  "headline": "Headline",
+  "postcode": "Postcode"
+}
 ```
 
 ##### messages_de.json
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<xliff version="1.2"
-       xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en"
-          target-language="de">
-        <body>
-            <trans-unit id="headline">
-                <source>Headline</source>
-                <target>Überschrift</target>
-            </trans-unit>
-            <trans-unit id="postcode">
-                <source>Postcode</source>
-                <target>Postleitzahl</target>
-            </trans-unit>
-        </body>
-    </file>
-</xliff>
+```json
+{
+  "headline": "Überschrift",
+  "postcode": "Postleitzahl"
+}
 ```
 
 ##### messages_en-US.json
 
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<xliff version="1.2"
-       xmlns="urn:oasis:names:tc:xliff:document:1.2">
-    <file source-language="en"
-          target-language="en-US">
-        <body>
-            <trans-unit id="postcode">
-                <source>Postcode</source>
-                <target>Zip code</target>
-            </trans-unit>
-        </body>
-    </file>
-</xliff>
+```json
+{
+  "postcode": "Zip code"
+}
 ```
 
 ##### payment.json
 
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.1" version="2.1"
-       srcLang="en" trgLang="en">
-    <file id="payment">
-        <unit>
-            <segment id="headline">
-                <source>Payment</source>
-                <target>Payment</target>
-            </segment>
-            <segment id="expiry_date">
-                <source>Expiry date</source>
-                <target>Expiry date</target>
-            </segment>
-        </unit>
-    </file>
-</xliff>
+```json
+{
+  "headline": "Payment",
+  "expiry_date": "Expire date"
+}
 ```
 
 ##### payment_de.json
 
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.1" version="2.1"
-       srcLang="en" trgLang="de">
-    <file id="payment_de">
-        <unit>
-            <segment id="headline">
-                <source>Payment</source>
-                <target>Zahlung</target>
-            </segment>
-            <segment id="expiry_date">
-                <source>Expiry date</source>
-                <target>Ablaufdatum</target>
-            </segment>
-        </unit>
-    </file>
-</xliff>
+```json
+{
+  "headline": "Zahlung",
+  "expiry_date": "Ablaufdatum"
+}
 ```
 
 ##### payment_en-US.json
 
-```xml
-<?xml version="1.0" encoding="UTF-8" ?>
-<xliff xmlns="urn:oasis:names:tc:xliff:document:2.1" version="2.1"
-       srcLang="en" trgLang="en-US">
-    <file id="payment_en-US">
-        <unit>
-            <segment id="expiry_date">
-                <source>Expiry date</source>
-                <target>Expiration date</target>
-            </segment>
-        </unit>
-    </file>
-</xliff>
+```json
+{
+  "expiry_date": "Expiration date"
+}
 ```
 
 #### Target value
