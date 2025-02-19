@@ -42,16 +42,16 @@ jobs:
       - name: Build and analyze (dev)
         run: |
           mvn test -P test-coverage
-#          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-#            -Dsonar.projectName=${{ vars.SONAR_PROJECT_NAME }} \
-#            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} \
-#            -Dsonar.branch.name=${{ steps.branch-name.outputs.ref_branch }} \
-#            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
-#            -Dsonar.host.url=${{ vars.SONAR_HOST_URL }} \
-#            -Dsonar.coverage.jacoco.xmlReportPaths=${{ vars.SONAR_COVERAGE_JACOCO_XML_REPORT_PATHS }} \
-#            -Dsonar.sources=${{ vars.SONAR_SOURCES }} \
-#            -Dsonar.tests=${{ vars.SONAR_TESTS }} \
-#            -Dsonar.exclusions=${{ vars.SONAR_EXCLUSIONS }} \
-#            -Dsonar.java.binaries=${{ vars.SONAR_JAVA_BINARIES }} \
-#            -Dsonar.coverage.exclusions=${{ vars.SONAR_COVERAGE_EXCLUSIONS }} \
-#            -Dsonar.java.source=17
+          mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+            -Dsonar.projectName=${{ vars.SONAR_PROJECT_NAME }} \
+            -Dsonar.projectKey=${{ vars.SONAR_PROJECT_KEY }} \
+            -Dsonar.branch.name=${{ steps.branch-name.outputs.ref_branch }} \
+            -Dsonar.organization=${{ vars.SONAR_ORGANIZATION }} \
+            -Dsonar.host.url=${{ vars.SONAR_HOST_URL }} \
+            -Dsonar.coverage.jacoco.xmlReportPaths=${{ vars.SONAR_COVERAGE_JACOCO_XML_REPORT_PATHS }} \
+            -Dsonar.sources=${{ vars.SONAR_SOURCES }} \
+            -Dsonar.tests=${{ vars.SONAR_TESTS }} \
+            -Dsonar.exclusions=${{ vars.SONAR_EXCLUSIONS }} \
+            -Dsonar.java.binaries=${{ vars.SONAR_JAVA_BINARIES }} \
+            -Dsonar.coverage.exclusions=${{ vars.SONAR_COVERAGE_EXCLUSIONS }} \
+            -Dsonar.java.source=17
