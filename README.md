@@ -34,7 +34,7 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 
 `defaultDomain(String defaultDomain)`
 
-* Defines the default domain. Default is `messages`. For more information, see [JSON Files](#xliff-files).
+* Defines the default domain. Default is `messages`. For more information, see [JSON Files](#json-files).
 
 
 ### Example
@@ -213,21 +213,17 @@ The behaviour of resolving the target value based on the code is equivalent to t
 > 
 > ***There is no translation for Japanese (`jp`). The default locale translations (`en`) are selected.
 
-[//]: # (## Full Example)
+## Full Example
+
+[https://github.com/alaugks/spring-messagesource-json](https://github.com/alaugks/spring-messagesource-json)
+
+[//]: # (## Support)
 
 [//]: # ()
-[//]: # (A Full Example using Spring Boot, mixing JSON 1.2 and JSON 2.1 translation files:)
+[//]: # (If you have questions, comments or feature requests please use the [Discussions]&#40;https://github.com/alaugks/spring-xliff-translation/discussions&#41; section.)
 
-[//]: # ()
-[//]: # (Repository: https://github.com/alaugks/spring-messagesource-json-example<br>)
+## Related MessageSources and Examples
 
-[//]: # (Website: https://spring-boot-xliff-example.alaugks.dev)
-
-## Support
-
-If you have questions, comments or feature requests please use the [Discussions](https://github.com/alaugks/spring-xliff-translation/discussions) section.
-
-## Related MessageSources 
-
-* [spring-messagesource-db-example](https://github.com/alaugks/spring-messagesource-db-example): Example custom Spring MessageSource from database
-* [spring-messagesource-json-example](https://github.com/alaugks/spring-messagesource-json-example): Example custom Spring MessageSource from JSON
+* [XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)
+* [Example: Spring MessageSource for XLIFF files](https://github.com/alaugks/spring-messagesource-json-example)
+* [Example: Custom Database Spring MessageSource](https://github.com/alaugks/spring-messagesource-db-example)
