@@ -215,7 +215,7 @@ The behaviour of resolving the target value based on the code is equivalent to t
 
 ## Full Example
 
-[https://github.com/alaugks/spring-messagesource-json](https://github.com/alaugks/spring-messagesource-json)
+[https://github.com/alaugks/spring-messagesource-json-example](https://github.com/alaugks/spring-messagesource-json-example)
 
 [//]: # (## Support)
 
