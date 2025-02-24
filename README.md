@@ -225,5 +225,6 @@ The behaviour of resolving the target value based on the code is equivalent to t
 ## Related MessageSources and Examples
 
 * [XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)
-* [Example: Spring MessageSource for XLIFF files](https://github.com/alaugks/spring-messagesource-json-example)
-* [Example: Custom Database Spring MessageSource](https://github.com/alaugks/spring-messagesource-db-example)
+* [Example: XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-xliff-example)
+* [Example: JSON MessageSource for Spring](https://github.com/alaugks/spring-messagesource-json-example)
+* [Example: Database MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)
