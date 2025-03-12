@@ -26,11 +26,11 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 ## MessageSource Configuration
 
 `builder(Locale defaultLocale, LocationPattern locationPattern)` (***required***)
-* Argument `Locale locale`: Defines the default locale.
-* Argument `String locationPattern` | `List<String> locationPatterns`:
+* Argument `Locale defaultLocale`: Defines the default locale.
+* Argument `LocationPattern locationPattern`:
   * Defines the pattern used to select the JSON files.
   * The package uses the [PathMatchingResourcePatternResolver](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/support/PathMatchingResourcePatternResolver.html) to select the JSON files. So you can use the supported patterns.
-  * Files with the extension `xliff` and `json` are filtered from the result list.
+  * Files with the extension `json` are filtered from the result list.
 
 `defaultDomain(String defaultDomain)`
 
