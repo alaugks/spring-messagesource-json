@@ -46,7 +46,6 @@ class JsonCatalogTest {
 		);
 
 		var catalog = new JsonCatalog(ressourceLoader.getTranslationFiles());
-		catalog.build();
 		var transUnits = catalog.getTransUnits();
 
 		assertEquals("Postcode", this.findInTransUnits(transUnits, "en", "postcode"));
@@ -69,7 +68,7 @@ class JsonCatalogTest {
 
 			var catalog = new JsonCatalog(list);
 
-			assertThrows(JsonResourceMessageSourceIOException.class, catalog::build);
+			assertThrows(JsonResourceMessageSourceIOException.class, catalog::getTransUnits);
 		} catch (IOException e) {
 			fail(e.getMessage());
 		}

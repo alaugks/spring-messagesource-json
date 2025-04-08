@@ -7,15 +7,15 @@
     <parent>
         <groupId>io.github.alaugks</groupId>
         <artifactId>spring-messagesource-parent</artifactId>
-        <version>1.0.2</version>
+        <version>3.3.10</version>
     </parent>
 
     <artifactId>spring-messagesource-json</artifactId>
-    <version>0.1.0</version>
+    <version>0.1.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Provides a Spring MessageSource for JSON files</description>
+    <description>Provides a JSON MessageSource for Spring</description>
     <url>https://github.com/alaugks/spring-messagesource-json</url>
 
     <licenses>
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>io.github.alaugks</groupId>
             <artifactId>spring-messagesource-catalog</artifactId>
-            <version>0.5.0</version>
+            <version>0.6.0-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -51,5 +51,19 @@
         </dependency>
 
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>maven-snapshots</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots/</url>
+            <layout>default</layout>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
 
 </project>

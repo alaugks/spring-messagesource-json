@@ -42,12 +42,6 @@ public class JsonCatalog extends AbstractCatalog {
 
 	@Override
 	public List<TransUnitInterface> getTransUnits() {
-		return this.transUnits;
-	}
-
-	@Override
-	public void build() {
-
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 
@@ -71,5 +65,7 @@ public class JsonCatalog extends AbstractCatalog {
 		} catch (IOException e) {
 			throw new JsonResourceMessageSourceIOException(e);
 		}
+
+		return this.transUnits;
 	}
 }
