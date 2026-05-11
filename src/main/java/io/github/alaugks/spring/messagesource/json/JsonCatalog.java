@@ -28,33 +28,42 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JsonCatalog extends AbstractCatalog {
 
-	private final List<TransUnitInterface> transUnits = new ArrayList<>();
 	private final List<TranslationFile> translationFiles;
 
+	/**
+	 * Creates a new catalog that parses the given JSON translation files.
+	 *
+	 * @param translationFiles JSON files to parse.
+	 */
 	public JsonCatalog(List<TranslationFile> translationFiles) {
 		this.translationFiles = translationFiles;
 	}
 
+	/**
+	 * Returns the translation units parsed from all configured JSON files.
+	 *
+	 * @return list of all translation units across the configured files; never {@code null}.
+	 * @throws JsonResourceMessageSourceIOException if a file cannot be read or parsed as JSON.
+	 */
 	@Override
 	public List<TransUnitInterface> getTransUnits() {
+		List<TransUnitInterface> transUnits = new ArrayList<>();
 		try {
 			ObjectMapper mapper = new ObjectMapper();
 
 			for (TranslationFile file : translationFiles) {
 
 				HashMap<String, Object> items = mapper.readValue(
-					new String(file.inputStream().readAllBytes()),
+					new String(file.content()),
 					new TypeReference<>() {
 					}
 				);
 
 				for (Map.Entry<String, Object> item : items.entrySet()) {
-					this.transUnits.add(new TransUnit(
+					transUnits.add(new TransUnit(
 						file.locale(),
 						item.getKey(),
 						item.getValue().toString(),
@@ -66,6 +75,6 @@ public class JsonCatalog extends AbstractCatalog {
 			throw new JsonResourceMessageSourceIOException(e);
 		}
 
-		return this.transUnits;
+		return transUnits;
 	}
 }

@@ -18,17 +18,12 @@ package io.github.alaugks.spring.messagesource.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import io.github.alaugks.spring.messagesource.catalog.records.TransUnitInterface;
 import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
 import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
 import io.github.alaugks.spring.messagesource.catalog.resources.ResourcesLoader;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -54,24 +49,16 @@ class JsonCatalogTest {
 
 	@Test
 	void test_IOException() {
+		List<TranslationFile> list = new ArrayList<>();
+		list.add(new TranslationFile(
+			"domain",
+			Locale.forLanguageTag("en"),
+			"{ invalid json".getBytes()
+		));
 
-		try {
-			InputStream inputStreamMock = mock(InputStream.class);
-			when(inputStreamMock.readAllBytes()).thenThrow(IOException.class);
+		var catalog = new JsonCatalog(list);
 
-			List<TranslationFile> list = new ArrayList<>();
-			list.add(new TranslationFile(
-				"domain",
-				Locale.forLanguageTag("en"),
-				inputStreamMock
-			));
-
-			var catalog = new JsonCatalog(list);
-
-			assertThrows(JsonResourceMessageSourceIOException.class, catalog::getTransUnits);
-		} catch (IOException e) {
-			fail(e.getMessage());
-		}
+		assertThrows(JsonResourceMessageSourceIOException.class, catalog::getTransUnits);
 	}
 
 	private String findInTransUnits(List<TransUnitInterface> transUnits, String locale, String code) {
