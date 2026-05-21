@@ -12,7 +12,6 @@ import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +41,7 @@ public class JsonCatalog extends AbstractCatalog {
 		List<TransUnitInterface> transUnits = new ArrayList<>();
 
 		for (TranslationFile file : translationFiles) {
-			HashMap<String, Object> items;
+			Map<String, Object> items;
 			try {
 				items = this.mapper.readValue(
 					file.content(),
