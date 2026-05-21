@@ -40,31 +40,38 @@ public class JsonCatalog extends AbstractCatalog {
 	@Override
 	public List<TransUnitInterface> getTransUnits() {
 		List<TransUnitInterface> transUnits = new ArrayList<>();
-		try {
 
-			for (TranslationFile file : translationFiles) {
-
-				HashMap<String, Object> items = this.mapper.readValue(
+		for (TranslationFile file : translationFiles) {
+			HashMap<String, Object> items;
+			try {
+				items = this.mapper.readValue(
 					file.content(),
 					new TypeReference<>() {
 					}
 				);
-
-				for (Map.Entry<String, Object> item : items.entrySet()) {
-					Object value = item.getValue();
-					if (value == null) {
-						continue;
-					}
-					transUnits.add(new TransUnit(
-						file.locale(),
-						item.getKey(),
-						value.toString(),
-						file.domain()
-					));
-				}
+			} catch (IOException e) {
+				throw new JsonResourceMessageSourceIOException(
+					String.format(
+						"Failed to parse JSON translation file (domain=%s, locale=%s)",
+						file.domain(),
+						file.locale()
+					),
+					e
+				);
 			}
-		} catch (IOException e) {
-			throw new JsonResourceMessageSourceIOException(e);
+
+			for (Map.Entry<String, Object> item : items.entrySet()) {
+				Object value = item.getValue();
+				if (value == null) {
+					continue;
+				}
+				transUnits.add(new TransUnit(
+					file.locale(),
+					item.getKey(),
+					value.toString(),
+					file.domain()
+				));
+			}
 		}
 
 		return transUnits;
