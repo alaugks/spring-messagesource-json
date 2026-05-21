@@ -17,6 +17,7 @@
 package io.github.alaugks.spring.messagesource.json;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.github.alaugks.spring.messagesource.catalog.records.TransUnitInterface;
@@ -45,6 +46,7 @@ class JsonCatalogTest {
 
 		assertEquals("Postcode", this.findInTransUnits(transUnits, "en", "postcode"));
 		assertEquals("Postleitzahl", this.findInTransUnits(transUnits, "de", "postcode"));
+		assertFalse(transUnits.stream().anyMatch(t -> t.code().equals("null_value")));
 	}
 
 	@Test

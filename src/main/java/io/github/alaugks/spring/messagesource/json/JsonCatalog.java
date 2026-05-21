@@ -31,6 +31,8 @@ import java.util.Map;
 
 public class JsonCatalog extends AbstractCatalog {
 
+	private final ObjectMapper mapper = new ObjectMapper();
+
 	private final List<TranslationFile> translationFiles;
 
 	/**
@@ -52,21 +54,24 @@ public class JsonCatalog extends AbstractCatalog {
 	public List<TransUnitInterface> getTransUnits() {
 		List<TransUnitInterface> transUnits = new ArrayList<>();
 		try {
-			ObjectMapper mapper = new ObjectMapper();
 
 			for (TranslationFile file : translationFiles) {
 
-				HashMap<String, Object> items = mapper.readValue(
+				HashMap<String, Object> items = this.mapper.readValue(
 					file.content(),
 					new TypeReference<>() {
 					}
 				);
 
 				for (Map.Entry<String, Object> item : items.entrySet()) {
+					Object value = item.getValue();
+					if (value == null) {
+						continue;
+					}
 					transUnits.add(new TransUnit(
 						file.locale(),
 						item.getKey(),
-						item.getValue().toString(),
+						value.toString(),
 						file.domain()
 					));
 				}
