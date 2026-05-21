@@ -22,13 +22,13 @@ class JsonCatalogTest {
 	@Test
 	void test_getTransUnits() {
 
-		var ressourceLoader = new ResourcesLoader(
+		var resourceLoader = new ResourcesLoader(
 				Locale.forLanguageTag("en"),
 				new LocationPattern(List.of("translations/messages.json", "translations/messages_de.json")),
 				List.of("json")
 		);
 
-		var catalog = new JsonCatalog(ressourceLoader.getTranslationFiles());
+		var catalog = new JsonCatalog(resourceLoader.getTranslationFiles());
 		var transUnits = catalog.getTransUnits();
 
 		assertEquals("Postcode", this.findInTransUnits(transUnits, "en", "postcode"));
