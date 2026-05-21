@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class JsonCatalog extends AbstractCatalog {
 
-	private final ObjectMapper mapper = new ObjectMapper();
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
 	private final List<TranslationFile> translationFiles;
 
@@ -43,7 +43,7 @@ public class JsonCatalog extends AbstractCatalog {
 		for (TranslationFile file : translationFiles) {
 			Map<String, Object> items;
 			try {
-				items = this.mapper.readValue(
+				items = OBJECT_MAPPER.readValue(
 					file.content(),
 					new TypeReference<>() {
 					}
