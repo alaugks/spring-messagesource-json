@@ -57,7 +57,7 @@ public class JsonCatalog extends AbstractCatalog {
 			for (TranslationFile file : translationFiles) {
 
 				HashMap<String, Object> items = mapper.readValue(
-					new String(file.content()),
+					file.content(),
 					new TypeReference<>() {
 					}
 				);
