@@ -228,3 +228,8 @@ The behaviour of resolving the target value based on the code is equivalent to t
 * [Example: XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-xliff-example)
 * [Example: JSON MessageSource for Spring](https://github.com/alaugks/spring-messagesource-json-example)
 * [Example: Database MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)
+
+## License
+
+Licensed under the [Apache License, Version 2.0](LICENSE).
+
