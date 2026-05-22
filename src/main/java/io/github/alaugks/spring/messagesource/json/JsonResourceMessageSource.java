@@ -9,6 +9,13 @@ import io.github.alaugks.spring.messagesource.catalog.resources.ResourcesLoader;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Entry point for building a Spring {@code MessageSource} backed by JSON
+ * translation files.
+ * <p>Use {@link #builder(Locale, LocationPattern)} to obtain a {@link Builder}
+ * and then call {@link Builder#build()} to assemble the resulting
+ * {@link CatalogMessageSourceBuilder}.
+ */
 public class JsonResourceMessageSource {
 
 	/**
@@ -34,6 +41,10 @@ public class JsonResourceMessageSource {
 		return new Builder(defaultLocale, locationPattern);
 	}
 
+	/**
+	 * Fluent builder for configuring and assembling a JSON-backed
+	 * {@link CatalogMessageSourceBuilder}.
+	 */
 	public static final class Builder {
 
 		private final Locale defaultLocale;

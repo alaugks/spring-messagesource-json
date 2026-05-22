@@ -15,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Catalog implementation that reads translation units from JSON files.
+ * <p>Each JSON file is expected to contain a flat map of translation code to
+ * value. The {@code locale} and {@code domain} are taken from the
+ * {@link TranslationFile} metadata, not from the file content itself.
+ */
 public class JsonCatalog extends AbstractCatalog {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
