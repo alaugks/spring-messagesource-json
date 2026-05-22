@@ -1,18 +1,5 @@
-/*
- * Copyright 2023-2025 André Laugks <alaugks@gmail.com>
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+// SPDX-License-Identifier: Apache-2.0
+// Copyright 2023 André Laugks <alaugks@gmail.com>
 
 package io.github.alaugks.spring.messagesource.json;
 
@@ -25,51 +12,73 @@ import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.stereotype.Component;
 
-@Component
+/**
+ * Catalog implementation that reads translation units from JSON files.
+ * <p>Each JSON file is expected to contain a flat map of translation code to
+ * value. The {@code locale} and {@code domain} are taken from the
+ * {@link TranslationFile} metadata, not from the file content itself.
+ */
 public class JsonCatalog extends AbstractCatalog {
 
-	private final List<TransUnitInterface> transUnits = new ArrayList<>();
+	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
+
 	private final List<TranslationFile> translationFiles;
 
+	/**
+	 * Creates a new catalog that parses the given JSON translation files.
+	 *
+	 * @param translationFiles JSON files to parse.
+	 */
 	public JsonCatalog(List<TranslationFile> translationFiles) {
 		this.translationFiles = translationFiles;
 	}
 
+	/**
+	 * Returns the translation units parsed from all configured JSON files.
+	 *
+	 * @return list of all translation units across the configured files; never {@code null}.
+	 * @throws JsonResourceMessageSourceIOException if a file cannot be read or parsed as JSON.
+	 */
 	@Override
 	public List<TransUnitInterface> getTransUnits() {
-		return this.transUnits;
-	}
+		List<TransUnitInterface> transUnits = new ArrayList<>();
 
-	@Override
-	public void build() {
-
-		try {
-			ObjectMapper mapper = new ObjectMapper();
-
-			for (TranslationFile file : translationFiles) {
-
-				HashMap<String, Object> items = mapper.readValue(
-					new String(file.inputStream().readAllBytes()),
+		for (TranslationFile file : translationFiles) {
+			Map<String, Object> items;
+			try {
+				items = OBJECT_MAPPER.readValue(
+					file.content(),
 					new TypeReference<>() {
 					}
 				);
-
-				for (Map.Entry<String, Object> item : items.entrySet()) {
-					this.transUnits.add(new TransUnit(
-						file.locale(),
-						item.getKey(),
-						item.getValue().toString(),
-						file.domain()
-					));
-				}
+			} catch (IOException e) {
+				throw new JsonResourceMessageSourceIOException(
+					String.format(
+						"Failed to parse JSON translation file (domain=%s, locale=%s)",
+						file.domain(),
+						file.locale()
+					),
+					e
+				);
 			}
-		} catch (IOException e) {
-			throw new JsonResourceMessageSourceIOException(e);
+
+			for (Map.Entry<String, Object> item : items.entrySet()) {
+				Object value = item.getValue();
+				if (value == null) {
+					continue;
+				}
+				transUnits.add(new TransUnit(
+					file.locale(),
+					item.getKey(),
+					value.toString(),
+					file.domain()
+				));
+			}
 		}
+
+		return transUnits;
 	}
 }
