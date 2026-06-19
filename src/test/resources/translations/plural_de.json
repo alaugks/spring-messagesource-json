@@ -1,0 +1,4 @@
+{
+  "file_deleted_icu4j": "{count, plural, =0 {Sie haben keine Dateien gelöscht.} =1 {Sie haben eine Datei gelöscht.} other {Sie haben # Dateien gelöscht.}}",
+  "file_deleted": "{0,choice,0#Sie haben keine Dateien gelöscht.|1#Sie haben eine Datei gelöscht.|1<Sie haben {0,number,integer} Dateien gelöscht.}"
+}

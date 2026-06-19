@@ -3,6 +3,7 @@
 
 package io.github.alaugks.spring.messagesource.json;
 
+import io.github.alaugks.spring.messagesource.catalog.AbstractCatalogMessageSourceBuilder;
 import io.github.alaugks.spring.messagesource.catalog.CatalogMessageSourceBuilder;
 import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
 import io.github.alaugks.spring.messagesource.catalog.resources.ResourcesLoader;
@@ -45,13 +46,9 @@ public class JsonResourceMessageSource {
 	 * Fluent builder for configuring and assembling a JSON-backed
 	 * {@link CatalogMessageSourceBuilder}.
 	 */
-	public static final class Builder {
-
-		private final Locale defaultLocale;
+	public static final class Builder extends AbstractCatalogMessageSourceBuilder<Builder> {
 
 		private final LocationPattern locationPattern;
-
-		private String defaultDomain = CatalogMessageSourceBuilder.DEFAULT_DOMAIN;
 
 		/**
 		 * Creates a new builder with the given default locale and JSON file
@@ -63,25 +60,8 @@ public class JsonResourceMessageSource {
 		 *                        the JSON files are located.
 		 */
 		public Builder(Locale defaultLocale, LocationPattern locationPattern) {
-			this.defaultLocale = defaultLocale;
+			super(defaultLocale);
 			this.locationPattern = locationPattern;
-		}
-
-		/**
-		 * Sets the default domain on the underlying
-		 * {@link CatalogMessageSourceBuilder}. Codes whose domain matches this
-		 * value are accessible by their bare code; codes from other domains
-		 * must be looked up as {@code <domain>.<code>}.
-		 * <p>The domain itself is always parsed from the JSON file name; this
-		 * setting only controls which domain is treated as "default" when
-		 * resolving codes.
-		 *
-		 * @param defaultDomain the new default domain.
-		 * @return this builder for chaining.
-		 */
-		public Builder defaultDomain(String defaultDomain) {
-			this.defaultDomain = defaultDomain;
-			return this;
 		}
 
 		/**
@@ -93,14 +73,16 @@ public class JsonResourceMessageSource {
 		 */
 		public CatalogMessageSourceBuilder build() {
 			ResourcesLoader resourcesLoader = new ResourcesLoader(
-				this.defaultLocale,
+				this.getDefaultLocale(),
 				locationPattern,
 				List.of("json")
 			);
 
 			return CatalogMessageSourceBuilder
-				.builder(new JsonCatalog(resourcesLoader.getTranslationFiles()), this.defaultLocale)
-				.defaultDomain(this.defaultDomain)
+				.builder(new JsonCatalog(resourcesLoader.getTranslationFiles()), this.getDefaultLocale())
+				.defaultDomain(this.getDefaultDomain())
+				.parentMessageSource(this.getParentMessageSource())
+				.setUseICU4j(this.isICU4jEnabled())
 				.build();
 		}
 	}
