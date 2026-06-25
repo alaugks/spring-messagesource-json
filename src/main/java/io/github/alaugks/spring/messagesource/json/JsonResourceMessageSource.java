@@ -82,7 +82,8 @@ public class JsonResourceMessageSource {
 				.builder(new JsonCatalog(resourcesLoader.getTranslationFiles()), this.getDefaultLocale())
 				.defaultDomain(this.getDefaultDomain())
 				.parentMessageSource(this.getParentMessageSource())
-				.setUseICU4j(this.isICU4jEnabled())
+				.useICU4j(this.isICU4jEnabled())
+				.domainDivider(this.getDomainDivider())
 				.build();
 		}
 	}
