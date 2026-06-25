@@ -58,4 +58,19 @@ class JsonResourceMessageSourceTest {
 				Locale.forLanguageTag("en")
 		));
 	}
+
+	@Test
+	void test_domainDivider() {
+		var messageSource = JsonResourceMessageSource
+			.builder(Locale.forLanguageTag("en"), new LocationPattern("translations/*"))
+			.enableICU4j()
+			.domainDivider("__")
+			.build();
+
+		assertEquals("Expiry date", messageSource.getMessage(
+			"payment__expiry_date",
+			null,
+			Locale.forLanguageTag("en")
+		));
+	}
 }
