@@ -62,7 +62,7 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 
 `parentMessageSource(MessageSource messageSource)`
 
-* Sets a parent `MessageSource` to delegate to. When a code cannot be resolved from the JSON files, the lookup falls back to the parent source.
+* Sets a parent `MessageSource` to delegate to. When a code cannot be resolved from the JSON files, the lookup falls back to the parent source. See [Parent MessageSource](README-Parent-MessageSource.md) for usage in both directions.
 
 
 ### Example
