@@ -62,7 +62,7 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 
 `parentMessageSource(MessageSource messageSource)`
 
-* Sets a parent `MessageSource` to delegate to. When a code cannot be resolved from the JSON files, the lookup falls back to the parent source. See [Parent MessageSource](README-Parent-MessageSource.md) for usage in either order.
+* Sets a parent `MessageSource` to delegate to. When a code cannot be resolved from the JSON files, the lookup falls back to the parent source. See [Parent MessageSource](docs/README-Parent-MessageSource.md) for usage in either order.
 
 
 ### Example
@@ -374,7 +374,7 @@ messageSource.getMessage(
 
 ## Related MessageSources and Examples
 
-* [XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)
+* [XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-xliff)
 * [Example: XLIFF MessageSource for Spring](https://github.com/alaugks/spring-messagesource-xliff-example)
 * [Example: JSON MessageSource for Spring](https://github.com/alaugks/spring-messagesource-json-example)
 * [Example: Database MessageSource for Spring](https://github.com/alaugks/spring-messagesource-db-example)

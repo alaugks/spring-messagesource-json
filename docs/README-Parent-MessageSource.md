@@ -7,7 +7,7 @@ This works in **either order**:
 1. [JSON first, other source as fallback](#1-json-first-other-source-as-fallback) — the JSON `MessageSource` is primary and delegates to the other source.
 2. [Other source first, JSON as fallback](#2-other-source-first-json-as-fallback) — the other source is primary and delegates to the JSON `MessageSource`.
 
-See the main [README](README.md) for keys, filenames and the full `MessageSource` configuration.
+See the main [README](../README.md) for keys, filenames and the full `MessageSource` configuration.
 
 ## How resolution works
 
