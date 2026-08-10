@@ -13,7 +13,7 @@ import java.util.Locale;
 /**
  * Entry point for building a Spring {@code MessageSource} backed by JSON
  * translation files.
- * <p>Use {@link #builder(Locale, LocationPattern)} to obtain a {@link Builder}
+ * <p>Use {@link #builder(Locale, String)} to obtain a {@link Builder}
  * and then call {@link Builder#build()} to assemble the resulting
  * {@link CatalogMessageSourceBuilder}.
  */
@@ -37,8 +37,39 @@ public class JsonResourceMessageSource {
 	 * @param locationPattern Spring resource pattern(s) describing where the
 	 *                        JSON files are located.
 	 * @return a new builder pre-configured with the given defaults.
+	 * @deprecated since 0.3.0, use {@link #builder(Locale, String)} or
+	 *             {@link #builder(Locale, List)} instead.
 	 */
+	@Deprecated(since = "0.3.0")
 	public static Builder builder(Locale defaultLocale, LocationPattern locationPattern) {
+		return builder(defaultLocale, locationPattern.getLocationPatterns());
+	}
+
+	/**
+	 * Creates a new {@link Builder} for assembling a JSON-backed Spring
+	 * {@code MessageSource}.
+	 *
+	 * @param defaultLocale   the locale to fall back to when a translation is
+	 *                        not available in the requested locale.
+	 * @param locationPattern a Spring resource pattern describing where the
+	 *                        JSON files are located.
+	 * @return a new builder pre-configured with the given defaults.
+	 */
+	public static Builder builder(Locale defaultLocale, String locationPattern) {
+		return builder(defaultLocale, List.of(locationPattern));
+	}
+
+	/**
+	 * Creates a new {@link Builder} for assembling a JSON-backed Spring
+	 * {@code MessageSource}.
+	 *
+	 * @param defaultLocale   the locale to fall back to when a translation is
+	 *                        not available in the requested locale.
+	 * @param locationPattern Spring resource pattern(s) describing where the
+	 *                        JSON files are located.
+	 * @return a new builder pre-configured with the given defaults.
+	 */
+	public static Builder builder(Locale defaultLocale, List<String> locationPattern) {
 		return new Builder(defaultLocale, locationPattern);
 	}
 
@@ -59,40 +90,10 @@ public class JsonResourceMessageSource {
 		 * @param locationPattern Spring resource pattern(s) describing where
 		 *                        the JSON files are located.
 		 */
-		public Builder(Locale defaultLocale, LocationPattern locationPattern) {
-			super(defaultLocale);
-			this.locationPattern = locationPattern.getLocationPatterns();
-		}
-
-		/**
-		 * Creates a new builder with the given default locale and JSON file
-		 * location pattern.
-		 *
-		 * @param defaultLocale   the locale to fall back to when a translation
-		 *                        is not available in the requested locale.
-		 * @param locationPattern Spring resource pattern(s) describing where
-		 *                        the JSON files are located.
-		 */
-		public Builder(Locale defaultLocale, String locationPattern) {
-			super(defaultLocale);
-			this.locationPattern = List.of(locationPattern);
-		}
-
-
-		/**
-		 * Creates a new builder with the given default locale and JSON file
-		 * location pattern.
-		 *
-		 * @param defaultLocale   the locale to fall back to when a translation
-		 *                        is not available in the requested locale.
-		 * @param locationPattern Spring resource pattern(s) describing where
-		 *                        the JSON files are located.
-		 */
 		public Builder(Locale defaultLocale, List<String> locationPattern) {
 			super(defaultLocale);
 			this.locationPattern = locationPattern;
 		}
-
 
 		/**
 		 * Assembles the configured {@link CatalogMessageSourceBuilder} backed
