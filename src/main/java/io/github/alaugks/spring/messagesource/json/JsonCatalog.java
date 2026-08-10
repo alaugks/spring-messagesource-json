@@ -9,6 +9,7 @@ import io.github.alaugks.spring.messagesource.catalog.catalog.AbstractCatalog;
 import io.github.alaugks.spring.messagesource.catalog.records.TransUnit;
 import io.github.alaugks.spring.messagesource.catalog.records.TransUnitInterface;
 import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
+import io.github.alaugks.spring.messagesource.catalog.records.TranslationFileInterface;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,14 +26,14 @@ public class JsonCatalog extends AbstractCatalog {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-	private final List<TranslationFile> translationFiles;
+	private final List<TranslationFileInterface> translationFiles;
 
 	/**
 	 * Creates a new catalog that parses the given JSON translation files.
 	 *
 	 * @param translationFiles JSON files to parse.
 	 */
-	public JsonCatalog(List<TranslationFile> translationFiles) {
+	public JsonCatalog(List<TranslationFileInterface> translationFiles) {
 		this.translationFiles = translationFiles;
 	}
 
@@ -46,7 +47,7 @@ public class JsonCatalog extends AbstractCatalog {
 	public List<TransUnitInterface> getTransUnits() {
 		List<TransUnitInterface> transUnits = new ArrayList<>();
 
-		for (TranslationFile file : translationFiles) {
+		for (TranslationFileInterface file : translationFiles) {
 			Map<String, Object> items;
 			try {
 				items = OBJECT_MAPPER.readValue(

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import io.github.alaugks.spring.messagesource.catalog.records.TransUnitInterface;
 import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
-import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
-import io.github.alaugks.spring.messagesource.catalog.resources.ResourcesLoader;
+import io.github.alaugks.spring.messagesource.catalog.records.TranslationFileInterface;
+import io.github.alaugks.spring.messagesource.catalog.resources.ResourceLoader;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,11 +22,10 @@ class JsonCatalogTest {
 	@Test
 	void test_getTransUnits() {
 
-		var resourceLoader = new ResourcesLoader(
+		var resourceLoader = ResourceLoader.builder(
 				Locale.forLanguageTag("en"),
-				new LocationPattern(List.of("translations/messages.json", "translations/messages_de.json")),
-				List.of("json")
-		);
+				List.of("translations/messages.json", "translations/messages_de.json")
+		).fileExtensions(List.of("json")).build();
 
 		var catalog = new JsonCatalog(resourceLoader.getTranslationFiles());
 		var transUnits = catalog.getTransUnits();
@@ -38,7 +37,7 @@ class JsonCatalogTest {
 
 	@Test
 	void test_IOException() {
-		List<TranslationFile> list = new ArrayList<>();
+		List<TranslationFileInterface> list = new ArrayList<>();
 		list.add(new TranslationFile(
 			"domain",
 			Locale.forLanguageTag("en"),
