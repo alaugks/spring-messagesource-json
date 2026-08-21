@@ -6,7 +6,7 @@ package io.github.alaugks.spring.messagesource.json;
 import io.github.alaugks.spring.messagesource.catalog.AbstractCatalogMessageSourceBuilder;
 import io.github.alaugks.spring.messagesource.catalog.CatalogMessageSourceBuilder;
 import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
-import io.github.alaugks.spring.messagesource.catalog.resources.ResourceLoader;
+import io.github.alaugks.spring.messagesource.catalog.resources.ResourceLoaderBuilder;
 import java.util.List;
 import java.util.Locale;
 
@@ -37,10 +37,10 @@ public class JsonResourceMessageSource {
 	 * @param locationPattern Spring resource pattern(s) describing where the
 	 *                        JSON files are located.
 	 * @return a new builder pre-configured with the given defaults.
-	 * @deprecated since 0.3.0, use {@link #builder(Locale, String)} or
+	 * @deprecated since 1.0.0, use {@link #builder(Locale, String)} or
 	 *             {@link #builder(Locale, List)} instead.
 	 */
-	@Deprecated(since = "0.3.0")
+	@Deprecated(since = "1.0.0")
 	public static Builder builder(Locale defaultLocale, LocationPattern locationPattern) {
 		return builder(defaultLocale, locationPattern.getLocationPatterns());
 	}
@@ -103,7 +103,7 @@ public class JsonResourceMessageSource {
 		 * @return the configured message source builder.
 		 */
 		public CatalogMessageSourceBuilder build() {
-			ResourceLoader resourcesLoader = ResourceLoader.builder(
+			ResourceLoaderBuilder resourcesLoader = ResourceLoaderBuilder.builder(
 				this.getDefaultLocale(),
 				locationPattern
 			).fileExtensions(List.of("json")).build();
