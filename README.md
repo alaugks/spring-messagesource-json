@@ -3,7 +3,7 @@
 This package provides a [MessageSource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/MessageSource.html) for using translations from JSON files.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=alaugks_spring-messagesource-json&metric=alert_status)](https://sonarcloud.io/summary/overall?id=alaugks_spring-messagesource-json)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/0.2.1)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/1.0.0)
 
 ## Table of Contents
 
@@ -32,29 +32,37 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 <dependency>
     <groupId>io.github.alaugks</groupId>
     <artifactId>spring-messagesource-json</artifactId>
-    <version>0.2.1</version>
+    <version>1.0.0</version>
 </dependency>
 ```
 
 ### Gradle 
 
 ```text
-implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '0.2.1'
+implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '1.0.0'
 ```
 
 
 ## MessageSource Configuration
 
-`builder(Locale defaultLocale, LocationPattern locationPattern)` (***required***)
+`builder(Locale defaultLocale, String locationPattern)` (***required***)<br>
+`builder(Locale defaultLocale, List<String> locationPattern)` (***required***)
 * Argument `Locale defaultLocale`: Defines the default locale.
-* Argument `LocationPattern locationPattern`:
-  * Defines the pattern used to select the JSON files.
+* Argument `locationPattern` (a single pattern or a list of patterns):
+  * Defines the pattern(s) used to select the JSON files.
   * The package uses the [PathMatchingResourcePatternResolver](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/support/PathMatchingResourcePatternResolver.html) to select the JSON files. So you can use the supported patterns.
   * Files with the extension `json` are filtered from the result list.
+
+> [!NOTE]
+> `builder(Locale defaultLocale, LocationPattern locationPattern)` is deprecated since 1.0.0. Pass the location pattern(s) directly as `String` or `List<String>` instead.
 
 `defaultDomain(String defaultDomain)`
 
 * Defines the default domain. Default is `messages`. Codes stored under this domain are also accessible without the domain prefix; codes stored under any other domain require the `<domain>.<code>` prefix. For more information, see [JSON Files](#json-files).
+
+`domainDivider(String domainDivider)`
+
+* Defines the divider between domain and code (`<domain><divider><code>`). Default is `.` (e.g. `payment.expiry_date`). With `domainDivider("__")`, the code becomes `payment__expiry_date`.
 
 `enableICU4j()`
 
@@ -72,7 +80,6 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 
 ```java
 import io.github.alaugks.spring.messagesource.json.JsonResourceMessageSource;
-import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -86,7 +93,7 @@ public class MessageSourceConfig {
        return JsonResourceMessageSource
                .builder(
                    Locale.forLanguageTag("en"),
-                   new LocationPattern("translations/*")
+                   "translations/*" // or List.of(...)
                )
                .build();
     }
@@ -292,7 +299,7 @@ public MessageSource messageSource() {
     return JsonResourceMessageSource
             .builder(
                 Locale.forLanguageTag("en"),
-                new LocationPattern("translations/*")
+                "translations/*" // or List.of(...)
             )
             .enableICU4j() // required for named arguments and plural/select
             .build();
