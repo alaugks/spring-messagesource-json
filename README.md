@@ -3,7 +3,7 @@
 This package provides a [MessageSource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/MessageSource.html) for using translations from JSON files.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=alaugks_spring-messagesource-json&metric=alert_status)](https://sonarcloud.io/summary/overall?id=alaugks_spring-messagesource-json)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/1.0.1)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/1.0.2)
 
 ## Table of Contents
 
@@ -32,14 +32,14 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 <dependency>
     <groupId>io.github.alaugks</groupId>
     <artifactId>spring-messagesource-json</artifactId>
-    <version>1.0.1</version>
+    <version>1.0.2</version>
 </dependency>
 ```
 
 ### Gradle 
 
 ```text
-implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '1.0.1'
+implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '1.0.2'
 ```
 
 
@@ -52,17 +52,6 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
   * Defines the pattern(s) used to select the JSON files.
   * The package uses the [PathMatchingResourcePatternResolver](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/core/io/support/PathMatchingResourcePatternResolver.html) to select the JSON files. So you can use the supported patterns.
   * Files with the extension `json` are filtered from the result list.
-
-> [!NOTE]
-> `builder(Locale defaultLocale, LocationPattern locationPattern)` is deprecated since 1.0.0. Pass the location pattern(s) directly as `String` or `List<String>` instead.
-
-`defaultDomain(String defaultDomain)`
-
-* Defines the default domain. Default is `messages`. Codes stored under this domain are also accessible without the domain prefix; codes stored under any other domain require the `<domain>.<code>` prefix. For more information, see [JSON Files](#json-files).
-
-`domainDivider(String domainDivider)`
-
-* Defines the divider between domain and code (`<domain><divider><code>`). Default is `.` (e.g. `payment.expiry_date`). With `domainDivider("__")`, the code becomes `payment__expiry_date`.
 
 `enableICU4j()`
 
@@ -103,53 +92,50 @@ public class MessageSourceConfig {
 
 ## JSON Files
 
-* Translations can be separated into different files (domains). The default domain is `messages`.
-* The default domain can be defined.
+* Translations can be split across multiple files; the key is always taken from the JSON key itself, the filename has no effect on it. Since the key is what's looked up, keys must be unique across all files.
 * Translation files must be stored in the resource folder and have the extension `json`.
 
 ### Structure of the Translation Filename
 
+The `<name>` part is freely choosable and has no functional meaning; it's not used to derive keys and files aren't otherwise linked by it (see [JSON Files](#json-files)). What matters is that the locale is recognised as a suffix of the filename:
+
 ```
 # Default language
-<domain>.json    // <domain>_<language>.json also works.
+<name>.json    // <name>_<language>.json also works.
 
-# Domain + Language
-<domain>[-_]<language>.json
+# Name + Language
+<name>[-_]<language>.json
 
-# Domain + Language + Region
-<domain>[-_]<language>[-_]<region>.json
+# Name + Language + Region
+<name>[-_]<language>[-_]<region>.json
 ```
 
 ### Example with JSON Files
 
-
-* Default domain is `messages`.
-
 * Default locale is `en` without region.
-
 * Translations are provided for the locale `en`, `de` and `en-US`.
 
 ```
 [resources]
      |-[translations]
-             |-messages.json           // Default domain and default language. messages_en.json also works.
+             |-messages.json   // messages_en.json also works.
              |-messages_de.json
              |-messages_en-US.json
-             |-payment.json            // Default language. payment_en.json also works.
-             |-payment_de.json
-             |-payment_en-US.json     
 ```  
 
 #### JSON Files
 
-Mixing JSON versions is possible. Here is an example using JSON 1.2 and JSON 2.1.
+> [!TIP]
+> Translations can be organized across multiple JSON files however you like (e.g. by feature or module); this example keeps everything in one file per locale. Only requirement: keys must be unique across all files, since it is the key.
 
 ##### messages.json
 
 ```json
 {
   "headline": "Headline",
-  "postcode": "Postcode"
+  "postcode": "Postcode",
+  "payment.headline": "Payment",
+  "payment.expiry_date": "Expiry date"
 }
 ```
 
@@ -158,7 +144,9 @@ Mixing JSON versions is possible. Here is an example using JSON 1.2 and JSON 2.1
 ```json
 {
   "headline": "Überschrift",
-  "postcode": "Postleitzahl"
+  "postcode": "Postleitzahl",
+  "payment.headline": "Zahlung",
+  "payment.expiry_date": "Ablaufdatum"
 }
 ```
 
@@ -166,33 +154,8 @@ Mixing JSON versions is possible. Here is an example using JSON 1.2 and JSON 2.1
 
 ```json
 {
-  "postcode": "Zip code"
-}
-```
-
-##### payment.json
-
-```json
-{
-  "headline": "Payment",
-  "expiry_date": "Expire date"
-}
-```
-
-##### payment_de.json
-
-```json
-{
-  "headline": "Zahlung",
-  "expiry_date": "Ablaufdatum"
-}
-```
-
-##### payment_en-US.json
-
-```json
-{
-  "expiry_date": "Expiration date"
+  "postcode": "Zip code",
+  "payment.expiry_date": "Expiration date"
 }
 ```
 
@@ -207,19 +170,19 @@ The behaviour of resolving the target value based on the code is equivalent to t
     <th>en</th>
     <th>en-US</th>
     <th>de</th>
-    <th>jp***</th>
+    <th>jp**</th>
   </tr>
   </thead>
   <tbody>
   <tr>
-    <td>headline*<br>messages.headline</td>
+    <td>headline</td>
     <td>Headline</td>
-    <td>Headline**</td>
+    <td>Headline*</td>
     <td>Überschrift</td>
     <td>Headline</td>
   </tr>
   <tr>
-    <td>postcode*<br>messages.postcode</td>
+    <td>postcode</td>
     <td>Postcode</td>
     <td>Zip code</td>
     <td>Postleitzahl</td>
@@ -228,7 +191,7 @@ The behaviour of resolving the target value based on the code is equivalent to t
   <tr>
     <td>payment.headline</td>
     <td>Payment</td>
-    <td>Payment**</td>
+    <td>Payment*</td>
     <td>Zahlung</td>
     <td>Payment</td>
   </tr>
@@ -242,11 +205,9 @@ The behaviour of resolving the target value based on the code is equivalent to t
   </tbody>
 </table>
 
-> *Default domain is `messages`.
->
-> **Example of a fallback from Language_Region (`en-US`) to Language (`en`). The `id` does not exist in `en-US`, so it tries to select the translation with locale `en`.
+> *Example of a fallback from Language_Region (`en-US`) to Language (`en`). The `id` does not exist in `en-US`, so it tries to select the translation with locale `en`.
 > 
-> ***There is no translation for Japanese (`jp`). The default locale translations (`en`) are selected.
+> **There is no translation for Japanese (`jp`). The default locale translations (`en`) are selected.
 
 ## Message Formatting
 

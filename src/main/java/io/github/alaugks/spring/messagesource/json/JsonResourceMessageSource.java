@@ -9,6 +9,7 @@ import io.github.alaugks.spring.messagesource.catalog.resources.LocationPattern;
 import io.github.alaugks.spring.messagesource.catalog.resources.ResourceLoaderBuilder;
 import java.util.List;
 import java.util.Locale;
+import org.springframework.util.Assert;
 
 /**
  * Entry point for building a Spring {@code MessageSource} backed by JSON
@@ -40,7 +41,7 @@ public class JsonResourceMessageSource {
 	 * @deprecated since 1.0.0, use {@link #builder(Locale, String)} or
 	 *             {@link #builder(Locale, List)} instead.
 	 */
-	@Deprecated(since = "1.0.0")
+	@Deprecated(since = "1.0.0", forRemoval = true)
 	public static Builder builder(Locale defaultLocale, LocationPattern locationPattern) {
 		return builder(defaultLocale, locationPattern.getLocationPatterns());
 	}
@@ -81,6 +82,10 @@ public class JsonResourceMessageSource {
 
 		private final List<String> locationPattern;
 
+		private String domainDivider = ".";
+
+		private String defaultDomain = CatalogMessageSourceBuilder.DEFAULT_DOMAIN;
+
 		/**
 		 * Creates a new builder with the given default locale and JSON file
 		 * location pattern.
@@ -93,6 +98,43 @@ public class JsonResourceMessageSource {
 		public Builder(Locale defaultLocale, List<String> locationPattern) {
 			super(defaultLocale);
 			this.locationPattern = locationPattern;
+		}
+
+		/**
+		 * @deprecated since 1.0.2. This feature is being discontinued without replacement in a
+		 * future minor version.
+		 *
+		 * Sets the domain divider to be used when building domain-based message catalogs.
+		 * Default is {@code .}
+		 *
+		 * @param domainDivider the domain divider string; must not be {@code null}
+		 * @return this builder
+		 */
+		@Override
+		@Deprecated(since = "1.0.2")
+		public Builder domainDivider(String domainDivider) {
+			Assert.notNull(domainDivider, "Argument domainDivider must not be null");
+			this.domainDivider = domainDivider;
+			return this;
+		}
+
+		/**
+		 * @deprecated since 1.0.2. This feature is being discontinued without replacement in a
+		 * future minor version.
+		 *
+		 * Sets the default domain. Codes stored under this domain are also accessible via
+		 * their name without the domain prefix; codes stored under any other domain require the
+		 * {@code <domain>.<code>} prefix.
+		 *
+		 * @param defaultDomain the default domain; must not be {@code null}
+		 * @return this builder
+		 */
+		@Override
+		@Deprecated(since = "1.0.2")
+		public Builder defaultDomain(String defaultDomain) {
+			Assert.notNull(defaultDomain, "Argument defaultDomain must not be null");
+			this.defaultDomain = defaultDomain;
+			return this;
 		}
 
 		/**
@@ -110,10 +152,10 @@ public class JsonResourceMessageSource {
 
 			return CatalogMessageSourceBuilder
 				.builder(this.getDefaultLocale(), new JsonCatalog(resourcesLoader.getTranslationFiles()))
-				.defaultDomain(this.getDefaultDomain())
+				.defaultDomain(this.defaultDomain)
 				.parentMessageSource(this.getParentMessageSource())
 				.useICU4j(this.isICU4jEnabled())
-				.domainDivider(this.getDomainDivider())
+				.domainDivider(this.domainDivider)
 				.build();
 		}
 	}
