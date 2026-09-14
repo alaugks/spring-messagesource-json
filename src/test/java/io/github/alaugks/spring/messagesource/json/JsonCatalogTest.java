@@ -3,10 +3,10 @@
 
 package io.github.alaugks.spring.messagesource.json;
 
-import io.github.alaugks.spring.messagesource.catalog.records.TransUnitInterface;
-import io.github.alaugks.spring.messagesource.catalog.records.TranslationFile;
-import io.github.alaugks.spring.messagesource.catalog.records.TranslationFileInterface;
-import io.github.alaugks.spring.messagesource.catalog.resources.ResourceLoaderBuilder;
+import io.github.alaugks.spring.messagesource.base.records.TransFile;
+import io.github.alaugks.spring.messagesource.base.records.TransFileInterface;
+import io.github.alaugks.spring.messagesource.base.records.TransUnitInterface;
+import io.github.alaugks.spring.messagesource.base.resources.ResourceLoaderBuilder;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,9 +37,8 @@ class JsonCatalogTest {
 
 	@Test
 	void test_IOException() {
-		List<TranslationFileInterface> list = new ArrayList<>();
-		list.add(new TranslationFile(
-			"domain",
+		List<TransFileInterface> list = new ArrayList<>();
+		list.add(new TransFile(
 			Locale.forLanguageTag("en"),
 			"{ invalid json".getBytes()
 		));
