@@ -21,10 +21,10 @@ public final class JsonResourceMessageSource {
 	/**
 	 * Utility class — not intended to be instantiated.
 	 *
-	 * @throws IllegalStateException always.
+	 * @throws UnsupportedOperationException always.
 	 */
 	private JsonResourceMessageSource() {
-		throw new IllegalStateException("Utility class");
+		throw new UnsupportedOperationException("Utility class");
 	}
 
 	/**
