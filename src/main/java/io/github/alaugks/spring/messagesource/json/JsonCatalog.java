@@ -21,7 +21,7 @@ import org.jspecify.annotations.Nullable;
  * value. The {@code locale} and {@code domain} are taken from the
  * {@link TransFileInterface} metadata, not from the file content itself.
  */
-public class JsonCatalog {
+class JsonCatalog {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 

@@ -16,7 +16,7 @@ import java.util.Locale;
  * and then call {@link Builder#build()} to assemble the resulting
  * {@link BaseMessageSourceBuilder}.
  */
-public class JsonResourceMessageSource {
+public final class JsonResourceMessageSource {
 
 	/**
 	 * Utility class — not intended to be instantiated.
