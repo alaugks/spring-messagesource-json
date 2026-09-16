@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
+import org.springframework.core.io.Resource;
 
 /**
  * Catalog implementation that reads translation units from JSON files.
@@ -57,7 +59,9 @@ class JsonCatalog {
 				throw new JsonResourceMessageSourceIOException(
 					String.format(
 						"Failed to parse JSON translation file: %s",
-						file.resource() != null ? file.resource().getFilename() : "unknown"
+						Optional.ofNullable(file.resource())
+							.map(Resource::getDescription)
+							.orElse("unknown")
 					),
 					e
 				);

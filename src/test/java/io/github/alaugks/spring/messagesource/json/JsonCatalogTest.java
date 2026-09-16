@@ -3,12 +3,9 @@
 
 package io.github.alaugks.spring.messagesource.json;
 
-import io.github.alaugks.spring.messagesource.base.records.TransFile;
-import io.github.alaugks.spring.messagesource.base.records.TransFileInterface;
 import io.github.alaugks.spring.messagesource.base.records.TransUnitInterface;
 import io.github.alaugks.spring.messagesource.base.resources.ResourceLoaderBuilder;
 import io.github.alaugks.spring.messagesource.json.exception.JsonResourceMessageSourceIOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
@@ -37,13 +34,12 @@ class JsonCatalogTest {
 
 	@Test
 	void test_IOException() {
-		List<TransFileInterface> list = new ArrayList<>();
-		list.add(new TransFile(
+		var resourceLoader = ResourceLoaderBuilder.builder(
 			Locale.forLanguageTag("en"),
-			"{ invalid json".getBytes()
-		));
+			List.of("fixtures/*")
+		).fileExtensions(List.of("json")).build();
 
-		var catalog = new JsonCatalog(list);
+		var catalog = new JsonCatalog(resourceLoader.getTranslationFiles());
 
 		assertThrows(JsonResourceMessageSourceIOException.class, catalog::getTransUnits);
 	}
