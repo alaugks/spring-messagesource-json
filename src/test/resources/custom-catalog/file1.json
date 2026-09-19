@@ -1,5 +1,5 @@
 {
-  "targetLanguage": "en",
+  "targetLocale": "en",
   "translation": {
     "postcode": "Postcode",
     "payment.headline": "Payment"

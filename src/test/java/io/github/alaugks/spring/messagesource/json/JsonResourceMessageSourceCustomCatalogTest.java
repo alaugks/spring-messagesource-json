@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
  * Verifies the README example that combines a content-based {@code targetLocaleResolver}
- * (locale read from the {@code targetLanguage} field) with a custom {@code jsonCatalog}
+ * (locale read from the {@code targetLocale} field) with a custom {@code jsonCatalog}
  * (translations read from the nested {@code translation} node).
  */
 class JsonResourceMessageSourceCustomCatalogTest {
@@ -43,8 +43,8 @@ class JsonResourceMessageSourceCustomCatalogTest {
 			.targetLocaleResolver(resource -> {
 				try (InputStream inputStream = resource.getInputStream()) {
 					JsonNode json = new ObjectMapper().readTree(inputStream);
-					String language = json.path("targetLanguage").asText();
-					return new TransFileTargetLocale(language, null);
+					Locale locale = Locale.forLanguageTag(json.path("targetLocale").asText());
+					return new TransFileTargetLocale(locale);
 				} catch (IOException e) {
 					throw new UncheckedIOException(e);
 				}

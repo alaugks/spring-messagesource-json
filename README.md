@@ -227,7 +227,7 @@ By default, the locale of a JSON file is derived from its filename (see [Structu
 
 ```json
 {
-  "targetLanguage": "de",
+  "targetLocale": "de",
   "postcode": "Postleitzahl",
   "payment.headline": "Zahlung"
 }
@@ -244,8 +244,8 @@ public MessageSource messageSource() {
             .targetLocaleResolver(resource -> {
                 try (InputStream inputStream = resource.getInputStream()) {
                     JsonNode json = new ObjectMapper().readTree(inputStream);
-                    String language = json.path("targetLanguage").asText(null);
-                    return new TransFileTargetLocale(language, null);
+                    Locale locale = Locale.forLanguageTag(json.path("targetLocale").asText());
+                    return new TransFileTargetLocale(locale);
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
@@ -255,17 +255,17 @@ public MessageSource messageSource() {
 ```
 
 > [!NOTE]
-> `targetLanguage` is only read to resolve the locale, it is not removed from the file. Since a JSON file is loaded as a flat code &rarr; value map (see [JSON Files](#json-files)), `targetLanguage` also shows up as an (unused) message code with the value `de`.
+> `targetLocale` is only read to resolve the locale, it is not removed from the file. Since a JSON file is loaded as a flat code &rarr; value map (see [JSON Files](#json-files)), `targetLocale` also shows up as an (unused) message code with the value `de`.
 
 ### Custom JSON Catalog
 
-By default, a JSON file's top-level keys are read as a flat code &rarr; value map (see [JSON Files](#json-files)). Pass a custom `JsonCatalogInterface` implementation to `jsonCatalog(...)` to parse the files differently instead, e.g. to nest the translations under their own key and keep metadata, such as `targetLanguage`, out of the message codes.
+By default, a JSON file's top-level keys are read as a flat code &rarr; value map (see [JSON Files](#json-files)). Pass a custom `JsonCatalogInterface` implementation to `jsonCatalog(...)` to parse the files differently instead, e.g. to nest the translations under their own key and keep metadata, such as `targetLocale`, out of the message codes.
 
 ##### messages_de.json
 
 ```json
 {
-  "targetLanguage": "de",
+  "targetLocale": "de",
   "translation": {
     "postcode": "Postleitzahl",
     "payment.headline": "Zahlung"
@@ -284,8 +284,8 @@ public MessageSource messageSource() {
             .targetLocaleResolver(resource -> {
                 try (InputStream inputStream = resource.getInputStream()) {
                     JsonNode json = new ObjectMapper().readTree(inputStream);
-                    String language = json.path("targetLanguage").asText(null);
-                    return new TransFileTargetLocale(language, null);
+                    Locale locale = Locale.forLanguageTag(json.path("targetLocale").asText());
+                    return new TransFileTargetLocale(locale);
                 } catch (IOException e) {
                     throw new UncheckedIOException(e);
                 }
@@ -311,7 +311,7 @@ public MessageSource messageSource() {
 }
 ```
 
-Combined with the [Custom Target Locale Resolver](#custom-target-locale-resolver) above, `targetLanguage` now only drives the locale and no longer leaks into the message codes, since the catalog only reads the `translation` node.
+Combined with the [Custom Target Locale Resolver](#custom-target-locale-resolver) above, `targetLocale` now only drives the locale and no longer leaks into the message codes, since the catalog only reads the `translation` node.
 
 > [!NOTE]
 > `JsonCatalogInterface` has a single method, `getTransUnits(List<TransFileInterface>)`, so — like `TargetLocaleResolverInterface` — it can be implemented as a lambda or as a standalone class.
