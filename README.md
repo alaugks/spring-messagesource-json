@@ -3,7 +3,7 @@
 This package provides a [MessageSource](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/context/MessageSource.html) for using translations from JSON files.
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=alaugks_spring-messagesource-json&metric=alert_status)](https://sonarcloud.io/summary/overall?id=alaugks_spring-messagesource-json)
-[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/2.0.0)
+[![Maven Central](https://img.shields.io/maven-central/v/io.github.alaugks/spring-messagesource-json.svg?label=Maven%20Central)](https://central.sonatype.com/artifact/io.github.alaugks/spring-messagesource-json/2.1.0)
 
 ## Table of Contents
 
@@ -16,6 +16,8 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
   - [Structure of the Translation Filename](#structure-of-the-translation-filename)
   - [Example with JSON Files](#example-with-json-files)
   - [Target value](#target-value)
+  - [Custom Target Locale Resolver](#custom-target-locale-resolver)
+  - [Custom JSON Catalog](#custom-json-catalog)
 - [Message Formatting](#message-formatting)
   - [Default (java.text.MessageFormat)](#default-javatextmessageformat)
   - [ICU4J (com.ibm.icu.text.MessageFormat)](#icu4j-comibmicutextmessageformat)
@@ -32,14 +34,14 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 <dependency>
     <groupId>io.github.alaugks</groupId>
     <artifactId>spring-messagesource-json</artifactId>
-    <version>2.0.0</version>
+    <version>2.1.0</version>
 </dependency>
 ```
 
 ### Gradle 
 
 ```text
-implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '2.0.0'
+implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', version: '2.1.0'
 ```
 
 
@@ -60,6 +62,14 @@ implementation group: 'io.github.alaugks', name: 'spring-messagesource-json', ve
 `parentMessageSource(MessageSource messageSource)`
 
 * Sets a parent `MessageSource` to delegate to. When a code cannot be resolved from the JSON files, the lookup falls back to the parent source. See [Parent MessageSource](docs/README-Parent-MessageSource.md) for usage in either order.
+
+`targetLocaleResolver(TargetLocaleResolverInterface targetLocaleResolver)`
+
+* Overrides how the locale of a JSON file is determined. By default, the locale is derived from the filename (see [Structure of the Translation Filename](#structure-of-the-translation-filename)). See [Custom Target Locale Resolver](#custom-target-locale-resolver) for details and an example.
+
+`jsonCatalog(JsonCatalogInterface jsonCatalog)`
+
+* Overrides how the JSON files are parsed into translation codes and values. By default, each file's top-level keys are read as a flat code &rarr; value map (see [JSON Files](#json-files)). See [Custom JSON Catalog](#custom-json-catalog) for details and an example.
 
 
 ### Example
@@ -208,6 +218,103 @@ The behaviour of resolving the target value based on the code is equivalent to t
 > *Example of a fallback from Language_Region (`en-US`) to Language (`en`). The `id` does not exist in `en-US`, so it tries to select the translation with locale `en`.
 > 
 > **There is no translation for Japanese (`jp`). The default locale translations (`en`) are selected.
+
+### Custom Target Locale Resolver
+
+By default, the locale of a JSON file is derived from its filename (see [Structure of the Translation Filename](#structure-of-the-translation-filename)). Pass a custom `TargetLocaleResolverInterface` implementation to `targetLocaleResolver(...)` to derive it differently instead, e.g. from a field inside the JSON file itself.
+
+##### messages_de.json
+
+```json
+{
+  "targetLanguage": "de",
+  "postcode": "Postleitzahl",
+  "payment.headline": "Zahlung"
+}
+```
+
+```java
+@Bean
+public MessageSource messageSource() {
+    return JsonResourceMessageSource
+            .builder(
+                Locale.forLanguageTag("en"),
+                "translations/*"
+            )
+            .targetLocaleResolver(resource -> {
+                try (InputStream inputStream = resource.getInputStream()) {
+                    JsonNode json = new ObjectMapper().readTree(inputStream);
+                    String language = json.path("targetLanguage").asText(null);
+                    return new TransFileTargetLocale(language, null);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            })
+            .build();
+}
+```
+
+> [!NOTE]
+> `targetLanguage` is only read to resolve the locale, it is not removed from the file. Since a JSON file is loaded as a flat code &rarr; value map (see [JSON Files](#json-files)), `targetLanguage` also shows up as an (unused) message code with the value `de`.
+
+### Custom JSON Catalog
+
+By default, a JSON file's top-level keys are read as a flat code &rarr; value map (see [JSON Files](#json-files)). Pass a custom `JsonCatalogInterface` implementation to `jsonCatalog(...)` to parse the files differently instead, e.g. to nest the translations under their own key and keep metadata, such as `targetLanguage`, out of the message codes.
+
+##### messages_de.json
+
+```json
+{
+  "targetLanguage": "de",
+  "translation": {
+    "postcode": "Postleitzahl",
+    "payment.headline": "Zahlung"
+  }
+}
+```
+
+```java
+@Bean
+public MessageSource messageSource() {
+    return JsonResourceMessageSource
+            .builder(
+                Locale.forLanguageTag("en"),
+                "translations/*"
+            )
+            .targetLocaleResolver(resource -> {
+                try (InputStream inputStream = resource.getInputStream()) {
+                    JsonNode json = new ObjectMapper().readTree(inputStream);
+                    String language = json.path("targetLanguage").asText(null);
+                    return new TransFileTargetLocale(language, null);
+                } catch (IOException e) {
+                    throw new UncheckedIOException(e);
+                }
+            })
+            .jsonCatalog(translationFiles -> {
+                List<TransUnitInterface> transUnits = new ArrayList<>();
+                ObjectMapper objectMapper = new ObjectMapper();
+
+                for (TransFileInterface file : translationFiles) {
+                    try {
+                        JsonNode translation = objectMapper.readTree(file.content()).path("translation");
+                        translation.properties().forEach(entry -> transUnits.add(
+                            new TransUnit(file.locale(), entry.getKey(), entry.getValue().asText())
+                        ));
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                }
+
+                return transUnits;
+            })
+            .build();
+}
+```
+
+Combined with the [Custom Target Locale Resolver](#custom-target-locale-resolver) above, `targetLanguage` now only drives the locale and no longer leaks into the message codes, since the catalog only reads the `translation` node.
+
+> [!NOTE]
+> `JsonCatalogInterface` has a single method, `getTransUnits(List<TransFileInterface>)`, so — like `TargetLocaleResolverInterface` — it can be implemented as a lambda or as a standalone class.
 
 ## Message Formatting
 

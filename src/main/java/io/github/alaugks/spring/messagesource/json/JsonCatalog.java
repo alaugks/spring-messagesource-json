@@ -13,7 +13,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import org.jspecify.annotations.Nullable;
+import org.springframework.core.io.Resource;
 
 /**
  * Catalog implementation that reads translation units from JSON files.
@@ -21,20 +23,9 @@ import org.jspecify.annotations.Nullable;
  * value. The {@code locale} and {@code domain} are taken from the
  * {@link TransFileInterface} metadata, not from the file content itself.
  */
-public class JsonCatalog {
+class JsonCatalog implements JsonCatalogInterface {
 
 	private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
-	private final List<TransFileInterface> translationFiles;
-
-	/**
-	 * Creates a new catalog that parses the given JSON translation files.
-	 *
-	 * @param translationFiles JSON files to parse.
-	 */
-	public JsonCatalog(List<TransFileInterface> translationFiles) {
-		this.translationFiles = translationFiles;
-	}
 
 	/**
 	 * Returns the translation units parsed from all configured JSON files.
@@ -42,7 +33,8 @@ public class JsonCatalog {
 	 * @return list of all translation units across the configured files; never {@code null}.
 	 * @throws JsonResourceMessageSourceIOException if a file cannot be read or parsed as JSON.
 	 */
-	public List<TransUnitInterface> getTransUnits() {
+	@Override
+	public List<TransUnitInterface> getTransUnits(List<TransFileInterface> translationFiles) {
 		List<TransUnitInterface> transUnits = new ArrayList<>();
 
 		for (TransFileInterface file : translationFiles) {
@@ -57,7 +49,9 @@ public class JsonCatalog {
 				throw new JsonResourceMessageSourceIOException(
 					String.format(
 						"Failed to parse JSON translation file: %s",
-						file.resource() != null ? file.resource().getFilename() : "unknown"
+						Optional.ofNullable(file.resource())
+							.map(Resource::getDescription)
+							.orElse("unknown")
 					),
 					e
 				);
