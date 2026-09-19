@@ -3,6 +3,7 @@
 
 package io.github.alaugks.spring.messagesource.json;
 
+import io.github.alaugks.spring.messagesource.base.resources.FileNameTargetLocaleResolver;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -36,6 +37,22 @@ class JsonResourceMessageSourceTest {
 		var messageSource = JsonResourceMessageSource
 			.builder(Locale.forLanguageTag("en"), List.of("translations/*"))
 			.enableICU4j()
+			.build();
+
+		assertEquals(expected, messageSource.getMessage(
+			code,
+			args,
+			Locale.forLanguageTag(locale)
+		));
+	}
+
+	@ParameterizedTest
+	@MethodSource("dataProvider_getMessage_code_args_locale")
+	void test_messagesource_targetLocaleResolver(String expected, String code, Object[] args, String locale) {
+		var messageSource = JsonResourceMessageSource
+			.builder(Locale.forLanguageTag("en"), "translations/*")
+			.enableICU4j()
+			.targetLocaleResolver(new FileNameTargetLocaleResolver())
 			.build();
 
 		assertEquals(expected, messageSource.getMessage(

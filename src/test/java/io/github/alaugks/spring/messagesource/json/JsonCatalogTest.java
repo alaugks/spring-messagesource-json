@@ -24,8 +24,8 @@ class JsonCatalogTest {
 				List.of("translations/messages.json", "translations/messages_de.json")
 		).fileExtensions(List.of("json")).build();
 
-		var catalog = new JsonCatalog(resourceLoader.getTranslationFiles());
-		var transUnits = catalog.getTransUnits();
+		var catalog = new JsonCatalog();
+		var transUnits = catalog.getTransUnits(resourceLoader.getTranslationFiles());
 
 		assertEquals("Postcode", this.findInTransUnits(transUnits, "en", "postcode"));
 		assertEquals("Postleitzahl", this.findInTransUnits(transUnits, "de", "postcode"));
@@ -39,9 +39,13 @@ class JsonCatalogTest {
 			List.of("fixtures/*")
 		).fileExtensions(List.of("json")).build();
 
-		var catalog = new JsonCatalog(resourceLoader.getTranslationFiles());
+		var catalog = new JsonCatalog();
+		var translationFiles = resourceLoader.getTranslationFiles();
 
-		assertThrows(JsonResourceMessageSourceIOException.class, catalog::getTransUnits);
+		assertThrows(
+			JsonResourceMessageSourceIOException.class,
+			() -> catalog.getTransUnits(translationFiles)
+		);
 	}
 
 	private String findInTransUnits(List<TransUnitInterface> transUnits, String locale, String code) {
