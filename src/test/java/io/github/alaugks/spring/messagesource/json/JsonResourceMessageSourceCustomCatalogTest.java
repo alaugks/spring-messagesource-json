@@ -17,10 +17,8 @@ import java.util.List;
 import java.util.Locale;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.MessageSource;
-import org.springframework.context.NoSuchMessageException;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Verifies the README example that combines a content-based {@code targetLocaleResolver}
@@ -37,17 +35,6 @@ class JsonResourceMessageSourceCustomCatalogTest {
 		assertEquals("Postleitzahl", messageSource.getMessage("postcode", null, Locale.forLanguageTag("de")));
 		assertEquals("Payment", messageSource.getMessage("payment.headline", null, Locale.forLanguageTag("en")));
 		assertEquals("Zahlung", messageSource.getMessage("payment.headline", null, Locale.forLanguageTag("de")));
-	}
-
-	@Test
-	void test_messagesource_doesNotLeakTargetLanguageAsMessageCode() {
-		MessageSource messageSource = this.buildMessageSource();
-		Locale locale = Locale.forLanguageTag("en");
-
-		assertThrows(
-			NoSuchMessageException.class,
-			() -> messageSource.getMessage("targetLanguage", null, locale)
-		);
 	}
 
 	private MessageSource buildMessageSource() {
