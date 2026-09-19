@@ -1,6 +1,9 @@
 name: "Central Release"
 run-name: Central Release [${{ github.ref_name }}]
 on:
+  push:
+    branches:
+      - 'snapshot/*'
   workflow_dispatch:
 jobs:
   release:
