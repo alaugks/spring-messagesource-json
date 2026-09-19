@@ -43,7 +43,7 @@ class JsonResourceMessageSourceCustomCatalogTest {
 			.targetLocaleResolver(resource -> {
 				try (InputStream inputStream = resource.getInputStream()) {
 					JsonNode json = new ObjectMapper().readTree(inputStream);
-					String language = json.path("targetLanguage").asText(null);
+					String language = json.path("targetLanguage").asText();
 					return new TransFileTargetLocale(language, null);
 				} catch (IOException e) {
 					throw new UncheckedIOException(e);
