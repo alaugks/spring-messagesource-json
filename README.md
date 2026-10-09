@@ -261,7 +261,7 @@ public MessageSource messageSource() {
 
 By default, a JSON file's top-level keys are read as a flat code &rarr; value map (see [JSON Files](#json-files)). Pass a custom `JsonCatalogInterface` implementation to `jsonCatalog(...)` to parse the files differently instead, e.g. to nest the translations under their own key and keep metadata, such as `targetLocale`, out of the message codes.
 
-##### messages_de.json
+##### file2.json
 
 ```json
 {
@@ -281,30 +281,23 @@ public MessageSource messageSource() {
                 Locale.forLanguageTag("en"),
                 "translations/*"
             )
-            .targetLocaleResolver(resource -> {
-                try (InputStream inputStream = resource.getInputStream()) {
-                    JsonNode json = new ObjectMapper().readTree(inputStream);
-                    Locale locale = Locale.forLanguageTag(json.path("targetLocale").asText());
-                    return new TransFileTargetLocale(locale);
-                } catch (IOException e) {
-                    throw new UncheckedIOException(e);
-                }
-            })
             .jsonCatalog(translationFiles -> {
                 List<TransUnitInterface> transUnits = new ArrayList<>();
                 ObjectMapper objectMapper = new ObjectMapper();
-
+            
                 for (TransFileInterface file : translationFiles) {
                     try {
-                        JsonNode translation = objectMapper.readTree(file.content()).path("translation");
+                        JsonNode node = objectMapper.readTree(file.content());
+                        Locale locale = Locale.forLanguageTag(node.path("targetLocale").asText());
+                        JsonNode translation = node.path("translation");
                         translation.properties().forEach(entry -> transUnits.add(
-                            new TransUnit(file.locale(), entry.getKey(), entry.getValue().asText())
+                            new TransUnit(locale, entry.getKey(), entry.getValue().asText())
                         ));
                     } catch (IOException e) {
                         throw new UncheckedIOException(e);
                     }
                 }
-
+            
                 return transUnits;
             })
             .build();
