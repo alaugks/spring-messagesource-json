@@ -7,6 +7,7 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 
 ## Table of Contents
 
+- [How it works](#how-it-works)
 - [Dependency](#dependency)
   - [Maven](#maven)
   - [Gradle](#gradle)
@@ -26,6 +27,15 @@ This package provides a [MessageSource](https://docs.spring.io/spring-framework/
 - [Full Example](#full-example)
 - [Related MessageSources and Examples](#related-messagesources-and-examples)
 - [License](#license)
+
+## How it works
+
+The JSON files are read once at startup and held in memory. Message resolution follows Spring's `ResourceBundleMessageSource`.
+
+1. **Loading:** `build()` reads all matching JSON files and turns every key/value pair into a `locale` / `code` / `value` entry, grouped per locale. The locale is derived from the filename (or from a custom [Target Locale Resolver](#custom-target-locale-resolver)); keys must be unique across all files (see [JSON Files](#json-files)).
+2. **Locale fallback:** For each requested locale, a `java.util.ResourceBundle` is created on top of these entries. The standard `ResourceBundle` lookup applies: `en-US` &rarr; `en` &rarr; default locale.
+
+Like Spring's `ResourceBundleMessageSource`, a `null` locale falls back to the default locale and a `MessageSourceResolvable` tries its codes in order. If nothing is found, `getMessage()` throws a `NoSuchMessageException` unless a default message is given.
 
 ## Dependency
 
